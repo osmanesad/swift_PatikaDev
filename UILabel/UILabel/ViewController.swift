@@ -9,9 +9,15 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var label: UILabel! // Interface Builder(IB)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        label.text = "Merhaba iOS"
+        label.font = UIFont.systemFont(ofSize: 36.0)
+        label.textColor = UIColor.systemPink
+        
     }
 
 
