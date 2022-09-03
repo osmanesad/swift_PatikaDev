@@ -9,7 +9,7 @@ import UIKit
 
 class InitialTableViewController: UITableViewController {
     
-    let tableViewData = [
+    var tableViewData = [
         ["Bilimkurgu","Tarih","Biyografi"],
         ["Colombia","Nambia","Africa"],
         ["Ofis","Ev","Okul"]
@@ -46,6 +46,27 @@ class InitialTableViewController: UITableViewController {
         cell.textLabel?.text = tableViewData[indexPath.section][indexPath.row]
 
         return cell
+        
+        
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let alertController = UIAlertController(title: "Uyarı",
+                                                message: tableViewData[indexPath.section][indexPath.row],
+                                                preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Tamam",
+                                                style: UIAlertAction.Style.default,
+                                                handler: {_ in
+            alertController.dismiss(animated: true)
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Sil", style: .destructive, handler: {_ in
+            self.tableViewData[indexPath.section].remove(at: indexPath.row)
+            tableView.reloadData()
+        }))
+        
+        present(alertController, animated: true)
     }
    
 
