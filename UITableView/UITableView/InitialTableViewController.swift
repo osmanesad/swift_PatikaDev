@@ -53,7 +53,7 @@ class InitialTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let alertController = UIAlertController(title: "Uyarı",
-                                                message: tableViewData[indexPath.section][indexPath.row],
+                                                message: "Seçilen değer: \(tableViewData[indexPath.section][indexPath.row])",
                                                 preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Tamam",
                                                 style: UIAlertAction.Style.default,
@@ -61,7 +61,7 @@ class InitialTableViewController: UITableViewController {
             alertController.dismiss(animated: true)
         }))
         
-        alertController.addAction(UIAlertAction(title: "Sil", style: .destructive, handler: {_ in
+        alertController.addAction(UIAlertAction(title: "Sil !", style: .destructive, handler: {_ in
             self.tableViewData[indexPath.section].remove(at: indexPath.row)
             tableView.reloadData()
         }))
