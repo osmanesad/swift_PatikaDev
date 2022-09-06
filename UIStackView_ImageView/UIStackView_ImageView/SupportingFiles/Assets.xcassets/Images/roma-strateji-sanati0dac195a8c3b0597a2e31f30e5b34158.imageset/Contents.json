@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "roma-strateji-sanati0dac195a8c3b0597a2e31f30e5b34158.jpg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
