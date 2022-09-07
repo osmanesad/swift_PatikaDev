@@ -41,6 +41,12 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="List App" id="wuK-xf-LVl">
+                        <barButtonItem key="leftBarButtonItem" systemItem="trash" id="taN-tk-2Ew">
+                            <color key="tintColor" systemColor="systemPinkColor"/>
+                            <connections>
+                                <action selector="didRemoveBarButtonItemTapped:" destination="BYZ-38-t0r" id="dnE-AD-z1J"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Zx1-le-NxV">
                             <color key="tintColor" systemColor="labelColor"/>
                             <connections>
@@ -81,6 +87,9 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemPinkColor">
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
