@@ -6,17 +6,21 @@
 //
 
 import UIKit
+import CoreData
 
 class ViewController: UIViewController {
     
     var alertController = UIAlertController()
     @IBOutlet weak var tableView: UITableView!
-    var exampleData = [String]()
+    
+    var exampleData = [NSManagedObject]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+       
+        fetch()
         
     }
     
@@ -49,8 +53,25 @@ class ViewController: UIViewController {
                      defaultButtonTitle: "Ekle", defaultButtonHandler: { _ in
             let text = self.alertController.textFields?.first?.text
             if text != "" {
-                self.exampleData.append((text)!)
-                self.tableView.reloadData()
+//
+                // MARK: Veritabanına Kayıt İşlemleri -
+                
+                
+                let appDelegate = UIApplication.shared.delegate as? AppDelegate
+                
+                let  managedObjectContext = appDelegate?.persistentContainer.viewContext
+                
+                let entity = NSEntityDescription.entity(forEntityName: "ListData", in: managedObjectContext!)
+                
+                let listItem = NSManagedObject(entity: entity!, insertInto: managedObjectContext)
+                
+                listItem.setValue(text, forKey: "content")
+                
+                try? managedObjectContext?.save()
+                
+                
+                
+                self.fetch()
             } else {
                 self.presentWarningAlert()
             }
@@ -81,7 +102,21 @@ class ViewController: UIViewController {
         present(alertController, animated: true)
         
     }
+// MARK: Fetch Function -
+    func fetch() {
+        
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let managedObjectContext = appDelegate?.persistentContainer.viewContext
+        
+        let fecthRequest = NSFetchRequest<NSManagedObject>(entityName: "ListData")
+        
+        exampleData =  try! managedObjectContext!.fetch(fecthRequest)
+        tableView.reloadData()
+        
+    }
 }
+
+
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -90,7 +125,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "defaultCell", for: indexPath)
-        cell.textLabel?.text = exampleData[indexPath.row]
+        let listItem = exampleData[indexPath.row]
+        cell.textLabel?.text = listItem.value(forKey: "content") as! String
         return cell
     }
     
@@ -98,9 +134,19 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     // MARK: Listeden eleman silme -
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        let deleteAction = UIContextualAction(style: .normal, title: "Sil ") { _, _, _ in
-            self.exampleData.remove(at: indexPath.row)
-            tableView.reloadData()
+        let deleteAction = UIContextualAction(style: .normal, title: "Sil ") { [self] _, _, _ in
+           // self.exampleData.remove(at: indexPath.row)
+            
+            
+            let appDelegate = UIApplication.shared.delegate as? AppDelegate
+            
+            let  managedObjectContext = appDelegate?.persistentContainer.viewContext
+            
+            managedObjectContext?.delete(self.exampleData[indexPath.row])
+            
+            try? managedObjectContext?.save()
+            
+            self.fetch()
         }
         deleteAction.backgroundColor = .systemRed
         
@@ -110,22 +156,32 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             self.presentAlert(title: "Düzenle",
                          message: nil,
                          preferredStyle: .alert,
-                         cancelButtonTitle: "Düzelt",
+                         cancelButtonTitle: "İptal",
                          isTextFieldAvailable: true,
-                         defaultButtonTitle: "İptal", defaultButtonHandler: { _ in
+                         defaultButtonTitle: "Düzelt", defaultButtonHandler: { _ in
                 let text = self.alertController.textFields?.first?.text
                 if text != "" {
-                    self.exampleData[indexPath.row] = text!
+//
+                    
+                    let appDelegate = UIApplication.shared.delegate as? AppDelegate
+                    
+                    let  managedObjectContext = appDelegate?.persistentContainer.viewContext
+                    
+                    self.exampleData[indexPath.row].setValue(text, forKey: "content")
+                    
+                    if managedObjectContext!.hasChanges {
+                        try? managedObjectContext?.save()
+                    }
+                    
                     self.tableView.reloadData()
                 } else {
                     //self.presentWarningAlert()
-                    self.tableView.reloadData()
-                }
+                    self.tableView.reloadData()              }
             })
             
             
         }
-        editAction.backgroundColor = .blue
+        //editAction.backgroundColor = .blue
         
         
         let config = UISwipeActionsConfiguration(actions: [deleteAction] + [editAction])
