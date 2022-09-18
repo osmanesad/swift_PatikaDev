@@ -33,7 +33,10 @@ class ViewController: UIViewController {
                      cancelButtonTitle: "İptal",
                      isTextFieldAvailable: false,
                      defaultButtonTitle: "Sil") { _ in
-            self.exampleData.removeAll()
+            //self.exampleData.removeAll()
+            
+           
+            
             self.tableView.reloadData()
         }
         
